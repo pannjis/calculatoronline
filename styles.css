@@ -204,11 +204,6 @@ body {
 .category-group .mode-select { font-size: .84rem; padding: 11px 40px 11px 14px; }
 .category-group optgroup { font-weight: 700; color: var(--primary); }
 .category-group option { font-weight: 500; color: var(--text); }
-.category-hint {
-  display: block; margin-top: 8px; padding: 8px 12px;
-  background: var(--primary-light); border-radius: 8px;
-  font-size: .76rem; font-weight: 600; color: var(--primary);
-}
 
 /* BUTTON */
 .btn-calc {

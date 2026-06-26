@@ -524,15 +524,11 @@ function buildCategoryOptions() {
 buildCategoryOptions();
 
 $("categorySelect").addEventListener("change", (e) => {
-  const hint = $("categoryHint");
-  if (!e.target.value) { hint.hidden = true; return; }
+  if (!e.target.value) return;
   const [gi, ii] = e.target.value.split(":").map(Number);
-  const cat = SHOPEE_CATEGORIES[gi];
-  const item = cat.items[ii];
+  const item = SHOPEE_CATEGORIES[gi].items[ii];
   $("adminRate").value = item.admin;
   $("presetSelect").value = "custom";
-  hint.textContent = "Biaya admin " + cat.group + " diset ke " + item.admin.toLocaleString("id-ID") + "%";
-  hint.hidden = false;
 });
 
 ["adminRate", "premiRate", "serviceRate", "fixedFee"].forEach((id) => {
