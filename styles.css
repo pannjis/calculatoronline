@@ -206,6 +206,13 @@ body {
 .category-group option { font-weight: 500; color: var(--text); }
 .admin-note { margin-top: 8px; font-size: .76rem; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 7px 10px; border-radius: 8px; }
 
+/* LABEL ROW + LOCK TOGGLE */
+.label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.label-row > label[for] { margin-bottom: 0; }
+.lock-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: .72rem; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none; }
+.lock-toggle input { width: 14px; height: 14px; cursor: pointer; accent-color: var(--primary); }
+.input-wrap-sm input.locked { background: var(--bg); color: var(--text-muted); cursor: not-allowed; }
+
 /* BUTTON */
 .btn-calc {
   display: flex; align-items: center; justify-content: center; gap: 10px;

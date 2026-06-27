@@ -210,9 +210,15 @@
             </div>
             <div class="fee-grid">
               <div class="form-group">
-                <label for="adminRate">Administrasi</label>
+                <div class="label-row">
+                  <label for="adminRate">Administrasi</label>
+                  <label class="lock-toggle">
+                    <input type="checkbox" id="adminEditToggle" />
+                    <span>Ubah manual</span>
+                  </label>
+                </div>
                 <div class="input-wrap-sm">
-                  <input type="number" id="adminRate" value="8.25" step="0.01" min="0" />
+                  <input type="number" id="adminRate" value="8.25" step="0.01" min="0" readonly />
                   <span class="input-suffix">%</span>
                 </div>
               </div>

@@ -524,6 +524,7 @@ $("presetSelect").addEventListener("change", (e) => {
   $("fixedFee").value = p.fixed;
   $("categorySelect").value = "";
   adminSource = "Preset: " + (PRESET_LABELS[e.target.value] || e.target.value);
+  lockAdminField(true);
   updateAdminNote();
 });
 
@@ -549,8 +550,23 @@ function updateAdminNote() {
   if (!note) return;
   note.textContent = "Biaya admin aktif: " + fmtPct(pct("adminRate") * 100) + " \u2014 " + adminSource;
 }
+// Kunci / buka field Administrasi. Default terkunci (mengikuti dropdown).
+function lockAdminField(locked) {
+  const input = $("adminRate");
+  const toggle = $("adminEditToggle");
+  if (!input) return;
+  input.readOnly = locked;
+  input.classList.toggle("locked", locked);
+  if (toggle) toggle.checked = !locked;
+}
 buildCategoryOptions();
+lockAdminField(true);
 updateAdminNote();
+
+$("adminEditToggle").addEventListener("change", (e) => {
+  lockAdminField(!e.target.checked);
+  if (e.target.checked) $("adminRate").focus();
+});
 
 $("categorySelect").addEventListener("change", (e) => {
   if (!e.target.value) { adminSource = "Manual / preset"; updateAdminNote(); return; }
@@ -559,6 +575,7 @@ $("categorySelect").addEventListener("change", (e) => {
   $("adminRate").value = item.admin;
   $("presetSelect").value = "custom";
   adminSource = "Kategori: " + item.name;
+  lockAdminField(true);
   updateAdminNote();
 });
 
