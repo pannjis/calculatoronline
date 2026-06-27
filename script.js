@@ -522,7 +522,6 @@ $("presetSelect").addEventListener("change", (e) => {
   $("premiRate").value = p.premi;
   $("serviceRate").value = p.service;
   $("fixedFee").value = p.fixed;
-  $("categorySelect").value = "";
   adminSource = "Preset: " + (PRESET_LABELS[e.target.value] || e.target.value);
   lockAdminField(true);
   updateAdminNote();
