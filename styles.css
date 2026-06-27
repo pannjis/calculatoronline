@@ -204,6 +204,7 @@ body {
 .category-group .mode-select { font-size: .84rem; padding: 11px 40px 11px 14px; }
 .category-group optgroup { font-weight: 700; color: var(--primary); }
 .category-group option { font-weight: 500; color: var(--text); }
+.admin-note { margin-top: 8px; font-size: .76rem; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 7px 10px; border-radius: 8px; }
 
 /* BUTTON */
 .btn-calc {

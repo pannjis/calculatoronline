@@ -94,11 +94,19 @@ const parseNum = (str) => {
   return d ? parseInt(d, 10) : 0;
 };
 const pct = (id) => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v / 100; };
+const fmtPct = (n) => n.toLocaleString("id-ID", { maximumFractionDigits: 2 }) + "%";
+function setBreakdownLabel(valueId, text) {
+  const el = document.querySelector('[id="' + valueId + '"]');
+  if (!el) return;
+  const span = el.parentElement.querySelector("span:first-child");
+  if (span) span.textContent = text;
+}
 
 let mode = "pricing";
 let platform = "shopee";
 let profitType = "nominal";
 let ttProfitType = "nominal";
+let adminSource = "Preset: Star Seller";
 
 // Format ribuan
 function attachFormat(el) {
@@ -217,6 +225,7 @@ function resetResult() {
 }
 
 function fillBreakdown(b) {
+  const f = getFees();
   $("rSubtotal").textContent = rupiah(b.price);
   $("rProduct").textContent = rupiah(b.price);
   $("rAdmin").textContent = "-" + rupiah(b.admin);
@@ -224,6 +233,11 @@ function fillBreakdown(b) {
   $("rService").textContent = "-" + rupiah(b.service);
   $("rFeesTotal").textContent = "-" + rupiah(b.total);
   $("rNet").textContent = rupiah(b.net);
+  // Tampilkan persentase tiap biaya untuk transparansi
+  setBreakdownLabel("rAdmin", defaultLabels.admin + " (" + fmtPct(f.admin * 100) + ")");
+  setBreakdownLabel("rPremi", defaultLabels.premi + " (" + fmtPct(f.premi * 100) + ")");
+  setBreakdownLabel("rService", defaultLabels.service + " (" + fmtPct(f.service * 100) + ")");
+  setBreakdownLabel("rFixed", defaultLabels.fixed);
   // Sembunyikan premi jika 0 (mis. Star Seller)
   $("rPremi").parentElement.hidden = b.premi <= 0;
   if (b.fixed > 0) { $("rowFixed").hidden = false; $("rFixed").textContent = "-" + rupiah(b.fixed); }
@@ -323,6 +337,7 @@ function ttBreakdown(price) {
 }
 
 function fillTTBreakdown(b) {
+  const f = getTTFees();
   $("rSubtotal").textContent = rupiah(b.price);
   $("rProduct").textContent = rupiah(b.price);
   $("rAdmin").textContent = "-" + rupiah(b.komisi);
@@ -330,6 +345,10 @@ function fillTTBreakdown(b) {
   $("rService").textContent = "-" + rupiah(b.proses);
   $("rFeesTotal").textContent = "-" + rupiah(b.total);
   $("rNet").textContent = rupiah(b.net);
+  setBreakdownLabel("rAdmin", ttLabels.admin + " (" + fmtPct(f.komisi * 100) + ")");
+  setBreakdownLabel("rPremi", ttLabels.premi + " (" + fmtPct(f.dinamis * 100) + ")");
+  setBreakdownLabel("rService", ttLabels.service);
+  setBreakdownLabel("rFixed", ttLabels.fixed);
   $("rowFixed").hidden = false;
   $("rFixed").textContent = "-" + rupiah(b.logistik);
   $("rPremi").parentElement.hidden = false;
@@ -495,6 +514,7 @@ function updatePanels() {
 document.querySelectorAll(".platform-tab").forEach((t) => t.addEventListener("click", () => setPlatform(t.dataset.platform)));
 $("modeSelect").addEventListener("change", (e) => setMode(e.target.value));
 
+const PRESET_LABELS = { default: "Default", nonstar: "Non-Star", star: "Star Seller", starplus: "Star+", custom: "Custom" };
 $("presetSelect").addEventListener("change", (e) => {
   const p = PRESETS[e.target.value];
   if (!p) return;
@@ -502,6 +522,9 @@ $("presetSelect").addEventListener("change", (e) => {
   $("premiRate").value = p.premi;
   $("serviceRate").value = p.service;
   $("fixedFee").value = p.fixed;
+  $("categorySelect").value = "";
+  adminSource = "Preset: " + (PRESET_LABELS[e.target.value] || e.target.value);
+  updateAdminNote();
 });
 
 // Populate category dropdown from SHOPEE_CATEGORIES
@@ -521,18 +544,30 @@ function buildCategoryOptions() {
     sel.appendChild(og);
   });
 }
+function updateAdminNote() {
+  const note = $("adminSourceNote");
+  if (!note) return;
+  note.textContent = "Biaya admin aktif: " + fmtPct(pct("adminRate") * 100) + " \u2014 " + adminSource;
+}
 buildCategoryOptions();
+updateAdminNote();
 
 $("categorySelect").addEventListener("change", (e) => {
-  if (!e.target.value) return;
+  if (!e.target.value) { adminSource = "Manual / preset"; updateAdminNote(); return; }
   const [gi, ii] = e.target.value.split(":").map(Number);
   const item = SHOPEE_CATEGORIES[gi].items[ii];
   $("adminRate").value = item.admin;
   $("presetSelect").value = "custom";
+  adminSource = "Kategori: " + item.name;
+  updateAdminNote();
 });
 
 ["adminRate", "premiRate", "serviceRate", "fixedFee"].forEach((id) => {
-  $(id).addEventListener("input", () => { $("presetSelect").value = "custom"; });
+  $(id).addEventListener("input", () => {
+    $("presetSelect").value = "custom";
+    adminSource = "Custom (manual)";
+    updateAdminNote();
+  });
 });
 
 $("calcBtn").addEventListener("click", () => {
