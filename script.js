@@ -522,6 +522,9 @@ $("presetSelect").addEventListener("change", (e) => {
   $("premiRate").value = p.premi;
   $("serviceRate").value = p.service;
   $("fixedFee").value = p.fixed;
+  // Preset menimpa semua biaya termasuk admin, jadi reset kategori
+  // agar dropdown tidak menampilkan kategori basi yang sudah tidak dipakai.
+  $("categorySelect").value = "";
   adminSource = "Preset: " + (PRESET_LABELS[e.target.value] || e.target.value);
   lockAdminField(true);
   updateAdminNote();
