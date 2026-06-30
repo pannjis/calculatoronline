@@ -1,8 +1,8 @@
 "use strict";
 
 const PRESETS = {
-  default:  { admin: 9.5, premi: 0.5, service: 4.5, fixed: 0 },
-  nonstar:  { admin: 9.5,  premi: 0.5, service: 4.5, fixed: 0 },
+  default:  { admin: 9.5, premi: 0, service: 4.5, fixed: 0 },
+  nonstar:  { admin: 9.5, premi: 0, service: 4.5, fixed: 0 },
   star:     { admin: 8.25, premi: 0, service: 6.5, fixed: 1250 },
   starplus: { admin: 8.25, premi: 0, service: 6.5, fixed: 1250 },
 };
@@ -106,7 +106,7 @@ let mode = "pricing";
 let platform = "shopee";
 let profitType = "nominal";
 let ttProfitType = "nominal";
-let adminSource = "Preset: Star Seller";
+let adminSource = "Preset: Non-Star";
 
 // Format ribuan
 function attachFormat(el) {
